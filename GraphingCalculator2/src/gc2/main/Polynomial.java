@@ -7,16 +7,11 @@ public class Polynomial {
 	// The polynomial as a string.
 	String polynomial;
 	
-	
-	
 	// The terms of the polynomial in the form "coeff-x^exponent"
 	String[] terms;
 	
 	// All of the +'s and -'s in the polynomial.
 	String[] signs;
-	
-	
-	
 	
 	// The types of operators
 	ArrayList<String> operators = new ArrayList<String>();
@@ -30,9 +25,10 @@ public class Polynomial {
 	/** Takes a polynomial as a string and will convert it into a readable expression. 
 	 * @param polynomialString -- The polynomial as a string. (ex. "x^2+5x+2")*/
 	public Polynomial(String polynomialString) {
-		this.operators.add("+"); this.operators.add("-");
+		// Add the operators so the program will know later on what to look for.
+		this.operators.add("+");
+		this.operators.add("-");
 		this.polynomial = polynomialString;
-		
 		
 		
 		// Get each term and put it into an array
@@ -41,12 +37,6 @@ public class Polynomial {
 		
 		// Makes sure the appropriate signs are added to each term.
 		assignSignsToTerms();
-		
-		
-		// Print out each term.
-		for(String s : terms) {
-			System.out.print(s + " ");
-		}
 	}
 
 	
@@ -155,9 +145,12 @@ public class Polynomial {
 
 	
 	/** Returns a single term, but with the "x^exponent" term replaced by the number when the value of 
-	 * the parameter "x" to the power specified in the original term.
+	 * the parameter "x" to the power specified in the original term. The coefficient, the x term, and the
+	 * exponent are all separated by a single space.
 	 * @param originalTerm -- The term from the original string that the user enters.
-	 * @param x -- The x value to evaluate the polynomial at. */
+	 * @param x -- The x value to evaluate the polynomial at.
+	 * @return the term, but with each value evaluated and coefficients, x's, and exponents separated by
+	 * a single space. */
 	private String getNumberString(String originalTerm, double x) {
 		double coefficient = 1;
 		double exponent = 1;
@@ -167,7 +160,7 @@ public class Polynomial {
 		// First, grab the coefficient, which is just the number until the first "x" that is found.
 		String coeffString = "";
 		for(int i = 0; i < originalTerm.length(); i++) {
-			if(!originalTerm.substring(i, i+1).equalsIgnoreCase("x")) {
+			if(!originalTerm.substring(i, i+1).equalsIgnoreCase("x") && !originalTerm.substring(i, i+1).equalsIgnoreCase("^")) {
 				coeffString += originalTerm.substring(i,i+1);
 			} else {
 				break;
@@ -179,14 +172,19 @@ public class Polynomial {
 		
 		
 		// Now get the exponent
+		String exponentString = "";
 		if(originalTerm.indexOf("^") > -1) {
-			String exponentString = originalTerm.substring(originalTerm.indexOf("^")+1, originalTerm.length());
-			exponent = (!exponentString.equals("")) ? Double.parseDouble(exponentString) : 1;
+			exponentString = originalTerm.substring(originalTerm.indexOf("^")+1, originalTerm.length());
 		}
+		exponent = (!exponentString.equals("")) ? Double.parseDouble(exponentString) : 1;
+		
 		
 		// Now replace the orignal term with the new one.
-		newTerm = "" + coefficient + " " + x + " " + exponent;
-		
+		if(originalTerm.contains("x") || originalTerm.contains("X")) {
+			newTerm = "" + coefficient + " " + x + " " + exponent;
+		} else {
+			newTerm = "" + coefficient + " " + exponent;
+		}
 		
 		return newTerm;
 	}
@@ -195,7 +193,8 @@ public class Polynomial {
 	
 	/** This method actually does the computation for evaluating a term. By the time the program gets here,
 	 * the string, term, will already be in a nice format for computing.
-	 * @param term -- The nicely formatted string of a polynomial term. */
+	 * @param term -- The nicely formatted string of a polynomial term.
+	 * @return the answer to "term" when evaluated. */
 	private double evaluateSingleTerm(String term) {
 		double answer = 0;
 		
@@ -204,11 +203,13 @@ public class Polynomial {
 		
 		// Set the appropriate variables.
 		double coeff = Double.parseDouble(parts[0]);
-		double x = Double.parseDouble(parts[1]);
-		double exponent = Double.parseDouble(parts[2]);
+		double x = (parts.length > 1) ? Double.parseDouble(parts[1]) : 1;
+		double exponent = (parts.length > 2) ? Double.parseDouble(parts[2]) : 1;
 		
 		// Compute the answer
 		answer = coeff * (Math.pow(x, exponent));
+		
+		
 		
 		// Return the answer
 		return answer;
@@ -217,7 +218,8 @@ public class Polynomial {
 	
 	
 	/** Evaluates the polynomial at the given value "x."
-	 * @param x -- The input value for the polynomial. */
+	 * @param x -- The input value for the polynomial.
+	 * @return the value of the entire polynomial evaluated at "x" */
 	public double evaluate(double x) {
 		double answer = 0;
 		
@@ -227,11 +229,12 @@ public class Polynomial {
 		
 		// Set up the evalsString list.
 		for(String term : terms) {
-			evalsString.add(getNumberString(term,x));
+			evalsString.add( getNumberString(term,x) );
 		}
 		
 		
 		// Now, add to the answer the number evaluation of each term.
+		// You can say += because all negatives will already be handled by the individual terms.
 		for(String stringEval : evalsString) {
 			answer += evaluateSingleTerm(stringEval);
 		}
