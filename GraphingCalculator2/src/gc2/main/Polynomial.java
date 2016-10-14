@@ -1,19 +1,20 @@
 package gc2.main;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 public class Polynomial {
 
 	// The polynomial as a string.
 	String polynomial;
 	
-	// The terms of the polynomial in the form "coeff-x^exponent"
+	// The terms of the polynomial in the form "coefficient-x^exponent"
 	String[] terms;
 	
 	// All of the +'s and -'s in the polynomial.
 	String[] signs;
 	
-	// The types of operators
+	// The types of operators as a string pattern.
 	ArrayList<String> operators = new ArrayList<String>();
 	
 	
@@ -26,17 +27,30 @@ public class Polynomial {
 	 * @param polynomialString -- The polynomial as a string. (ex. "x^2+5x+2")*/
 	public Polynomial(String polynomialString) {
 		// Add the operators so the program will know later on what to look for.
-		this.operators.add("+");
-		this.operators.add("-");
 		this.polynomial = polynomialString;
+		operators.add("+");
+		operators.add("-");
 		
+		// Add a plus or minus at the beginning
+		if(this.polynomial.substring(0,1).equals("-")) {
+			// don't do anything
+		} else {
+			this.polynomial = "+" + this.polynomial;
+		}
+
 		
 		// Get each term and put it into an array
 		terms = getEachTerm();
-		signs = getSigns();
+		signs = getSigns();	
 		
-		// Makes sure the appropriate signs are added to each term.
-		assignSignsToTerms();
+		
+		// Add ones if there is just an "x" term with no other coefficient.
+		addOnes();
+		
+		
+		for(String s : terms) {
+			System.out.println(s);
+		}
 	}
 
 	
@@ -45,16 +59,12 @@ public class Polynomial {
 	
 	/////////// Setters ////////////
 	
-	/** Makes sure that each term has the correct sign. That is, if the equation had a "-2x" it would make
-	 * sure that the term "2x" does not appear positive in the terms array. Instead, it will convert it to 
-	 * "-2x" because of the sign at the appropraite index of the signs array. */
-	private void assignSignsToTerms() {
-		// The starting index in the terms array
-		int start = 1;
-		
-		for(int i = 0; i < signs.length; i++) {
-			terms[start] = signs[i] + terms[start];
-			start++;
+	private void addOnes() {
+		for(int i = 0; i < terms.length; i++) {
+			// If it just an x term, put a 1 in front of it.
+			if(terms[i].matches("[-+][xX].*")) {
+				terms[i] = terms[i].substring(0, 1) + "1x" + terms[i].substring(2);
+			}
 		}
 	}
 	
@@ -62,9 +72,23 @@ public class Polynomial {
 	
 	
 	
-	
 	/////////// Getters ////////////
 
+	/** Finds and returns the index of the next operator.
+	 * @return the index of the next operator in the polynomial. */
+	private int findNextOperator(String poly, int start) {
+		for(int i = start+1; i < poly.length(); i++) {
+			
+			if(operators.contains(poly.substring(i, i+1))) {
+				return i;
+			}
+			
+		}
+		
+		return poly.length();
+	}
+	
+	
 	
 	/** Returns an array of the terms in the polynomial.
 	 * @return the terms, without their signs, as an array of strings. */
@@ -73,32 +97,17 @@ public class Polynomial {
 		String poly = polynomial;
 		ArrayList<String> ts = new ArrayList<String>();
 		
+		
 		// Start from the beginning
-		for(int i = 0; i < poly.length(); i++) {
-			String character = poly.substring(i, i+1);
-			String term = "";
+		while(poly.length() > 0) {
+			int stop = findNextOperator(poly, 0);
 			
-			// If the current character is not an operator, loop through until you find one.
-			if(!operators.contains(character)) {
-				
-				for(int j = i; j < poly.length(); j++) {
-					String character2 = poly.substring(j,j+1);
-					
-					// If the character you're looking at now is still not an operator, add it to the term.
-					if(!operators.contains(character2)) {
-						term += character2;
-					
-					// If you do find an operator, move i to the current position, j.
-					} else {
-						i = j - 1;
-						break;
-					}
-				}
-				
-				// Add the term to the list.
-				ts.add(term);
-			}
+			String term = poly.substring(0, stop);
+			poly = poly.substring(stop);
+			
+			ts.add(term);
 		}
+		
 		
 		// Add each term to the array from the array list
 		theTerms = new String[ts.size()];
@@ -123,10 +132,10 @@ public class Polynomial {
 		
 		// Loop through and add all of the operators to the list. Update the size also.
 		for(int i = 0; i < poly.length(); i++) {
-			if(operators.contains(poly.substring(i, i+1))) {
-				size++;
-				signs.add(poly.substring(i,i+1));
-			}
+//			if(operators.contains(poly.substring(i, i+1))) {
+//				size++;
+//				signs.add(poly.substring(i,i+1));
+//			}
 		}
 		
 		
