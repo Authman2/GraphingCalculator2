@@ -1,7 +1,6 @@
 package gc2.main;
 
 import java.util.ArrayList;
-import java.util.regex.Pattern;
 
 public class Polynomial {
 
@@ -10,9 +9,6 @@ public class Polynomial {
 	
 	// The terms of the polynomial in the form "coefficient-x^exponent"
 	String[] terms;
-	
-	// All of the +'s and -'s in the polynomial.
-	String[] signs;
 	
 	// The types of operators as a string pattern.
 	ArrayList<String> operators = new ArrayList<String>();
@@ -41,16 +37,10 @@ public class Polynomial {
 		
 		// Get each term and put it into an array
 		terms = getEachTerm();
-		signs = getSigns();	
 		
 		
 		// Add ones if there is just an "x" term with no other coefficient.
 		addOnes();
-		
-		
-		for(String s : terms) {
-			System.out.println(s);
-		}
 	}
 
 	
@@ -59,6 +49,7 @@ public class Polynomial {
 	
 	/////////// Setters ////////////
 	
+	/** Puts a 1 in front of all x terms if there is no other coefficient. */
 	private void addOnes() {
 		for(int i = 0; i < terms.length; i++) {
 			// If it just an x term, put a 1 in front of it.
@@ -85,6 +76,7 @@ public class Polynomial {
 			
 		}
 		
+		// Default is to return the length of the polynomial, which means you've reached the end of the polynomial
 		return poly.length();
 	}
 	
@@ -122,37 +114,6 @@ public class Polynomial {
 	
 	
 	
-	/** Returns an array of all of the signs (+ or -) in the polynomial.
-	 * @return all the +'s and -'s in the polynomial. */
-	private String[] getSigns() {
-		String[] theSigns = null;
-		int size = 0;
-		String poly = polynomial;
-		ArrayList<String> signs = new ArrayList<String>();
-		
-		// Loop through and add all of the operators to the list. Update the size also.
-		for(int i = 0; i < poly.length(); i++) {
-//			if(operators.contains(poly.substring(i, i+1))) {
-//				size++;
-//				signs.add(poly.substring(i,i+1));
-//			}
-		}
-		
-		
-		// Add all of the terms to the array
-		theSigns = new String[size];
-		int k = 0;
-		for(String s : signs) {
-			theSigns[k] = s;
-			k++;
-		}
-		
-		
-		return theSigns;
-	}
-
-
-	
 	/** Returns a single term, but with the "x^exponent" term replaced by the number when the value of 
 	 * the parameter "x" to the power specified in the original term. The coefficient, the x term, and the
 	 * exponent are all separated by a single space.
@@ -162,38 +123,49 @@ public class Polynomial {
 	 * a single space. */
 	private String getNumberString(String originalTerm, double x) {
 		double coefficient = 1;
+		double nX = 1;
 		double exponent = 1;
 		String newTerm = "";
 		
 		
-		// First, grab the coefficient, which is just the number until the first "x" that is found.
+		// Get the coefficient
 		String coeffString = "";
-		for(int i = 0; i < originalTerm.length(); i++) {
-			if(!originalTerm.substring(i, i+1).equalsIgnoreCase("x") && !originalTerm.substring(i, i+1).equalsIgnoreCase("^")) {
-				coeffString += originalTerm.substring(i,i+1);
+		if(originalTerm.indexOf("x") > -1) {
+			coeffString = originalTerm.substring(0, originalTerm.indexOf("x"));
+		} else {
+			if(originalTerm.indexOf("^") > 0) {
+				coeffString = originalTerm.substring(0, originalTerm.indexOf("^"));
 			} else {
-				break;
+				coeffString = originalTerm.substring(0);
 			}
 		}
 		
-		// If the coeffString is not the empty string (meaning there is a term), parse that into coefficient
-		coefficient = (!coeffString.equals("")) ? Double.parseDouble(coeffString) : 1;
+		
+		// Get the x term
+		String xString = "";
+		if(originalTerm.indexOf("x") > -1) {
+			xString = "" + x;
+		} else {
+			xString = "1";
+		}
 		
 		
-		// Now get the exponent
+		// Get the exponent
 		String exponentString = "";
 		if(originalTerm.indexOf("^") > -1) {
-			exponentString = originalTerm.substring(originalTerm.indexOf("^")+1, originalTerm.length());
-		}
-		exponent = (!exponentString.equals("")) ? Double.parseDouble(exponentString) : 1;
-		
-		
-		// Now replace the orignal term with the new one.
-		if(originalTerm.contains("x") || originalTerm.contains("X")) {
-			newTerm = "" + coefficient + " " + x + " " + exponent;
+			exponentString = originalTerm.substring(originalTerm.indexOf("^")+1);
 		} else {
-			newTerm = "" + coefficient + " " + exponent;
+			exponentString = "1";
 		}
+		
+		
+		// Create the new term
+		coefficient = Double.parseDouble(coeffString);
+		nX = Double.parseDouble(xString);
+		exponent = Double.parseDouble(exponentString);
+		
+		newTerm = "" + coefficient + " " + nX + " " + exponent;
+		//System.out.println(newTerm);
 		
 		return newTerm;
 	}
@@ -212,13 +184,13 @@ public class Polynomial {
 		
 		// Set the appropriate variables.
 		double coeff = Double.parseDouble(parts[0]);
-		double x = (parts.length > 1) ? Double.parseDouble(parts[1]) : 1;
-		double exponent = (parts.length > 2) ? Double.parseDouble(parts[2]) : 1;
+		double x = Double.parseDouble(parts[1]);
+		double exponent = Double.parseDouble(parts[2]);
 		
 		// Compute the answer
 		answer = coeff * (Math.pow(x, exponent));
 		
-		
+		//System.out.println("Single Term Eval: " + answer);
 		
 		// Return the answer
 		return answer;
@@ -234,6 +206,7 @@ public class Polynomial {
 		
 		// A list for the evaluations as strings.
 		ArrayList<String> evalsString = new ArrayList<String>();
+		ArrayList<Double> evaluations = new ArrayList<Double>();
 		
 		
 		// Set up the evalsString list.
@@ -245,7 +218,13 @@ public class Polynomial {
 		// Now, add to the answer the number evaluation of each term.
 		// You can say += because all negatives will already be handled by the individual terms.
 		for(String stringEval : evalsString) {
-			answer += evaluateSingleTerm(stringEval);
+			evaluations.add(evaluateSingleTerm(stringEval));
+		}
+		
+		
+		for(Double d : evaluations) {
+			answer += d;
+			//System.out.println("Answer Evaluation: " + answer);
 		}
 		
 		
