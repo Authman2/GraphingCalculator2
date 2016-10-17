@@ -1,5 +1,10 @@
 package gc2.actions;
 
+import java.awt.GridLayout;
+
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import cw.components.titlebar.specific.sidebar.Action;
@@ -18,6 +23,11 @@ public class ButtonActions extends Action {
 	
 	// The graph panel to display the graph on.
 	Graph graph;
+	
+	// Where to graph the function.
+	String xMinString = "-10", xMaxString = "10", yMinString = "-10", yMaxString = "10";
+	
+	
 	
 	
 	
@@ -58,12 +68,12 @@ public class ButtonActions extends Action {
 		graph.setPoly(new Polynomial(tf.getText()));
 		
 		//Max and Min x values
-        double thisMin = Double.parseDouble("-10");
-        double thisMax = Double.parseDouble("10");
+        double thisMin = Double.parseDouble(xMinString);
+        double thisMax = Double.parseDouble(xMaxString);
         
         //Max and Min y values
-        double thisMiny = Double.parseDouble("-10");
-        double thisMaxy = Double.parseDouble("10");
+        double thisMiny = Double.parseDouble(yMinString);
+        double thisMaxy = Double.parseDouble(yMaxString);
         
         graph.findPointsToPlot(thisMin, thisMax, thisMiny, thisMaxy);
 	}
@@ -80,7 +90,29 @@ public class ButtonActions extends Action {
 	
 	
 	private void changeXInterval() {
-		System.out.println("X interval");
+		JPanel panel = new JPanel(new GridLayout(2,2,5,5));
+		panel.add(new JLabel("X-Min:"));
+		JTextField f1 = new JTextField();
+		panel.add(f1);
+		panel.add(new JLabel("X-Max:"));
+		JTextField f2 = new JTextField();
+		panel.add(f2);
+		
+		int result = JOptionPane.showConfirmDialog(null, panel, "xMin - xMax", JOptionPane.OK_CANCEL_OPTION);
+		
+		if(result == JOptionPane.OK_OPTION) {
+			if(!f1.getText().equals("") && !f1.getText().equals(null)) {
+				xMinString = f1.getText();
+			}
+			if(!f2.getText().equals("") && !f2.getText().equals(null)) {
+				xMaxString = f2.getText();
+			}
+			
+			graphFunction();
+		} else {
+			xMinString = "-10";
+			xMaxString = "10";
+		}
 	}
 	
 

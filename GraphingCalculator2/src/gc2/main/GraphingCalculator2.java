@@ -14,6 +14,9 @@ public class GraphingCalculator2 {
 	public static JTextField functionInput;
 	public static Graph graph;
 	
+	
+	
+	
 	public static void main(String[] args) {
 		SidebarWindow window = new SidebarWindow("Graphing Calculator");
 		window.setSize(650,500);
