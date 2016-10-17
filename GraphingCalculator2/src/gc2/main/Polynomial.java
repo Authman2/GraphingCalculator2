@@ -39,7 +39,7 @@ public class Polynomial {
 		terms = getEachTerm();
 		
 		
-		// Add ones if there is just an "x" term with no other coefficient.
+		// Add "1" if there is just an "x" term with no other coefficient.
 		addOnes();
 	}
 
@@ -67,8 +67,8 @@ public class Polynomial {
 
 	/** Finds and returns the index of the next operator.
 	 * @return the index of the next operator in the polynomial. */
-	private int findNextOperator(String poly, int start) {
-		for(int i = start+1; i < poly.length(); i++) {
+	private int findNextOperator(String poly) {
+		for(int i = 1; i < poly.length(); i++) {
 			
 			if(operators.contains(poly.substring(i, i+1))) {
 				return i;
@@ -85,18 +85,22 @@ public class Polynomial {
 	/** Returns an array of the terms in the polynomial.
 	 * @return the terms, without their signs, as an array of strings. */
 	private String[] getEachTerm() {
-		String[] theTerms;
-		String poly = polynomial;
+		String[] theTerms;	// The final array of terms.
+		String poly = polynomial;	// Get a copy of the polynomial.
 		ArrayList<String> ts = new ArrayList<String>();
 		
 		
 		// Start from the beginning
 		while(poly.length() > 0) {
-			int stop = findNextOperator(poly, 0);
+			// Find the next operator.
+			int stop = findNextOperator(poly);
 			
+			// The term that you are currently looking at is from 0 to stop.
 			String term = poly.substring(0, stop);
+			// Shorten the poly string so you can continue to look for the next operator starting from 0.
 			poly = poly.substring(stop);
 			
+			// Add the term.
 			ts.add(term);
 		}
 		
@@ -133,7 +137,7 @@ public class Polynomial {
 		if(originalTerm.indexOf("x") > -1) {
 			coeffString = originalTerm.substring(0, originalTerm.indexOf("x"));
 		} else {
-			if(originalTerm.indexOf("^") > 0) {
+			if(originalTerm.indexOf("^") > -1) {
 				coeffString = originalTerm.substring(0, originalTerm.indexOf("^"));
 			} else {
 				coeffString = originalTerm.substring(0);
@@ -206,6 +210,7 @@ public class Polynomial {
 		
 		// A list for the evaluations as strings.
 		ArrayList<String> evalsString = new ArrayList<String>();
+		// A list for the evaluations of each individual term.
 		ArrayList<Double> evaluations = new ArrayList<Double>();
 		
 		
@@ -218,7 +223,7 @@ public class Polynomial {
 		// Now, add to the answer the number evaluation of each term.
 		// You can say += because all negatives will already be handled by the individual terms.
 		for(String stringEval : evalsString) {
-			evaluations.add(evaluateSingleTerm(stringEval));
+			evaluations.add( evaluateSingleTerm(stringEval) );
 		}
 		
 		

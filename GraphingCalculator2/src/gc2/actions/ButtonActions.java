@@ -1,6 +1,10 @@
 package gc2.actions;
 
+import javax.swing.JTextField;
+
 import cw.components.titlebar.specific.sidebar.Action;
+import gc2.main.Graph;
+import gc2.main.Polynomial;
 
 public class ButtonActions extends Action {
 
@@ -9,9 +13,21 @@ public class ButtonActions extends Action {
 	// matter that much.
 	String name = "";
 	
+	// The text field to grab the polynomial from.
+	JTextField tf;
 	
-	public ButtonActions(String n) {
+	// The graph panel to display the graph on.
+	Graph graph;
+	
+	
+	
+	/**@param n -- The name of the operation to perform.
+	 * @param tf -- The text field to grab the polynomial from
+	 * @param g -- The graph to display the polynomial on. */
+	public ButtonActions(String n, JTextField tf, Graph g) {
 		name = n;
+		this.tf = tf;
+		this.graph = g;
 	}
 
 	
@@ -38,7 +54,18 @@ public class ButtonActions extends Action {
 	/////////// Methods ////////////
 	
 	private void graphFunction() {
-		System.out.println("Graph");
+		
+		graph.setPoly(new Polynomial(tf.getText()));
+		
+		//Max and Min x values
+        double thisMin = Double.parseDouble("-10");
+        double thisMax = Double.parseDouble("10");
+        
+        //Max and Min y values
+        double thisMiny = Double.parseDouble("-10");
+        double thisMaxy = Double.parseDouble("10");
+        
+        graph.findPointsToPlot(thisMin, thisMax, thisMiny, thisMaxy);
 	}
 	
 	
