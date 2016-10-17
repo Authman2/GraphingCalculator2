@@ -40,15 +40,13 @@ public class GraphingCalculator2 {
 		((SideTitlebar)window.getTitlebar()).addMenuItem("Graph Function");
 		((SideTitlebar)window.getTitlebar()).addMenuItem("Graph Derivative");
 		((SideTitlebar)window.getTitlebar()).addMenuItem("Show Roots");
-		((SideTitlebar)window.getTitlebar()).addMenuItem("xMin-xMin");
-		((SideTitlebar)window.getTitlebar()).addMenuItem("yMin-yMax");
+		((SideTitlebar)window.getTitlebar()).addMenuItem("Change Interval");
 		
 		// Give the buttons actions
 		((SideTitlebar)window.getTitlebar()).getMenuItems().get(0).addAction(new ButtonActions("GRAPH", functionInput, graph));
 		((SideTitlebar)window.getTitlebar()).getMenuItems().get(1).addAction(new ButtonActions("DERIVATIVE", functionInput, graph));
 		((SideTitlebar)window.getTitlebar()).getMenuItems().get(2).addAction(new ButtonActions("ROOTS", functionInput, graph));
-		((SideTitlebar)window.getTitlebar()).getMenuItems().get(3).addAction(new ButtonActions("X_INTERVAL", functionInput, graph));
-		((SideTitlebar)window.getTitlebar()).getMenuItems().get(4).addAction(new ButtonActions("Y_INTERVAL", functionInput, graph));
+		((SideTitlebar)window.getTitlebar()).getMenuItems().get(3).addAction(new ButtonActions("INTERVAL", functionInput, graph));
 		
 		
 		

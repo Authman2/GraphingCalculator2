@@ -50,10 +50,8 @@ public class ButtonActions extends Action {
 			graphDerivative();
 		} else if(name.equals("ROOTS")) {
 			showRoots();
-		} else if(name.equals("X_INTERVAL")) {
+		} else if(name.equals("INTERVAL")) {
 			changeXInterval();
-		} else if(name.equals("Y_INTERVAL")) {
-			changeYInterval();
 		}
 	}
 
@@ -89,35 +87,53 @@ public class ButtonActions extends Action {
 	}
 	
 	
+	/** Brings up a window to change the x interval. */
 	private void changeXInterval() {
 		JPanel panel = new JPanel(new GridLayout(2,2,5,5));
 		panel.add(new JLabel("X-Min:"));
-		JTextField f1 = new JTextField();
+		JTextField f1 = new JTextField(xMinString);
 		panel.add(f1);
 		panel.add(new JLabel("X-Max:"));
-		JTextField f2 = new JTextField();
+		JTextField f2 = new JTextField(xMaxString);
 		panel.add(f2);
+		panel.add(new JLabel("Y-Min"));
+		JTextField f3 = new JTextField(yMinString);
+		panel.add(f3);
+		panel.add(new JLabel("Y-Max"));
+		JTextField f4 = new JTextField(yMaxString);
+		panel.add(f4);
 		
-		int result = JOptionPane.showConfirmDialog(null, panel, "xMin - xMax", JOptionPane.OK_CANCEL_OPTION);
+		int result = JOptionPane.showConfirmDialog(null, panel, "Min - Max", JOptionPane.OK_CANCEL_OPTION);
 		
 		if(result == JOptionPane.OK_OPTION) {
 			if(!f1.getText().equals("") && !f1.getText().equals(null)) {
 				xMinString = f1.getText();
+			} else {
+				xMinString = "-10";
 			}
 			if(!f2.getText().equals("") && !f2.getText().equals(null)) {
 				xMaxString = f2.getText();
+			} else {
+				xMaxString = "10";
+			}
+			if(!f3.getText().equals("") && !f3.getText().equals(null)) {
+				yMinString = f3.getText();
+			} else {
+				yMinString = "-10";
+			}
+			if(!f4.getText().equals("") && !f4.getText().equals(null)) {
+				yMaxString = f4.getText();
+			} else {
+				yMaxString = "10";
 			}
 			
 			graphFunction();
 		} else {
 			xMinString = "-10";
 			xMaxString = "10";
+			yMinString = "-10";
+			yMaxString = "10";
 		}
-	}
-	
-
-	private void changeYInterval() {
-		System.out.println("Y interval");
 	}
 	
 	
