@@ -434,8 +434,18 @@ public class Polynomial {
 				double nCoeff = coefficients[i] * exponents[i];
 				double nExp = exponents[i] - 1;
 			
-				nTerm = "" + nCoeff + "x^" + nExp;
-				newTerms.add(nTerm);
+				if(nExp == 0) {
+					// An exponent of zero will just be a constant
+					nTerm = "" + coefficients[i];
+					newTerms.add(nTerm);
+				} else if(nExp == 1) {
+					// Don't show the exponent
+					nTerm = "" + nCoeff + "x";
+					newTerms.add(nTerm);
+				} else {
+					nTerm = "" + nCoeff + "x^" + nExp;
+					newTerms.add(nTerm);
+				}
 			} else {
 				// Nothing, because if it was a constant term it will go away.
 			}
@@ -459,6 +469,9 @@ public class Polynomial {
 		String poly = "";
 		for(String term : terms) {
 			poly += term;
+		}
+		if(poly.startsWith("+")) {
+			poly = poly.substring(1);
 		}
 		return poly;
 	}

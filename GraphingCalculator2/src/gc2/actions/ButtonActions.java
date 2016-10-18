@@ -45,7 +45,7 @@ public class ButtonActions extends Action {
 	}
 
 	
-	
+	/** The overriden execute method. */
 	@Override
 	public void execute() {
 		if(name.equals("GRAPH")) {
@@ -91,6 +91,7 @@ public class ButtonActions extends Action {
 	private void graphDerivative() {
 		try {
 			graph.setPoly(new Polynomial(tf.getText()).getDerivative());
+			tf.setText(graph.getPolynomial().toString());
 			
 			//Max and Min x values
 	        double thisMin = Double.parseDouble(xMinString);
@@ -104,6 +105,9 @@ public class ButtonActions extends Action {
 	        
 		} catch(StringIndexOutOfBoundsException err) {
         	JOptionPane.showMessageDialog(graph, "You must enter a polynomial to graph.");
+        
+		} catch(NumberFormatException err) {
+			JOptionPane.showMessageDialog(graph, "There is no derivative of this polynomial.");
         }
 	}
 	
