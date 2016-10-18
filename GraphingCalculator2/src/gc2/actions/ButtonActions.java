@@ -87,16 +87,31 @@ public class ButtonActions extends Action {
 	}
 	
 	
+	/** Graphs the derivative of the function on the screen. */
 	private void graphDerivative() {
-		
+		try {
+			graph.setPoly(new Polynomial(tf.getText()).getDerivative());
+			
+			//Max and Min x values
+	        double thisMin = Double.parseDouble(xMinString);
+	        double thisMax = Double.parseDouble(xMaxString);
+	        
+	        //Max and Min y values
+	        double thisMiny = Double.parseDouble(yMinString);
+	        double thisMaxy = Double.parseDouble(yMaxString);
+	        
+	        graph.findPointsToPlot(thisMin, thisMax, thisMiny, thisMaxy);
+	        
+		} catch(StringIndexOutOfBoundsException err) {
+        	JOptionPane.showMessageDialog(graph, "You must enter a polynomial to graph.");
+        }
 	}
 	
 	
 	/** Displays the roots of the polynomial. */
 	private void showRoots() {
 		try {
-			String poly = tf.getText();
-			Polynomial p = new Polynomial(poly);
+			Polynomial p = graph.getPolynomial();
 			double[] roots = p.getRoots((int)Double.parseDouble(xMinString), (int)Double.parseDouble(xMaxString));
 			
 			
@@ -111,7 +126,7 @@ public class ButtonActions extends Action {
 				}
 			}
 			rootsTF.setText(s);
-		} catch(StringIndexOutOfBoundsException err) {
+		} catch(NullPointerException err) {
 			JOptionPane.showMessageDialog(graph, "You must enter a polynomial to find its roots.");
 		}
 	}

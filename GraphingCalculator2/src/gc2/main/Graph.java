@@ -27,7 +27,9 @@ private static final long serialVersionUID = 5445026948607143713L;
 	public void setPoly(Polynomial p) {
 		this.p = p;
 	}
-	
+	public Polynomial getPolynomial() {
+		return p;
+	}
 	
 	
 	public void paintComponent(Graphics g) {
