@@ -65,45 +65,55 @@ public class ButtonActions extends Action {
 	
 	/////////// Methods ////////////
 	
+	/** Shows the graph of the polynomial on the screen. */
 	private void graphFunction() {
 		
-		graph.setPoly(new Polynomial(tf.getText()));
-		
-		//Max and Min x values
-        double thisMin = Double.parseDouble(xMinString);
-        double thisMax = Double.parseDouble(xMaxString);
-        
-        //Max and Min y values
-        double thisMiny = Double.parseDouble(yMinString);
-        double thisMaxy = Double.parseDouble(yMaxString);
-        
-        graph.findPointsToPlot(thisMin, thisMax, thisMiny, thisMaxy);
+		try {
+			graph.setPoly(new Polynomial(tf.getText()));
+			
+			//Max and Min x values
+	        double thisMin = Double.parseDouble(xMinString);
+	        double thisMax = Double.parseDouble(xMaxString);
+	        
+	        //Max and Min y values
+	        double thisMiny = Double.parseDouble(yMinString);
+	        double thisMaxy = Double.parseDouble(yMaxString);
+	        
+	        graph.findPointsToPlot(thisMin, thisMax, thisMiny, thisMaxy);
+	        
+		} catch(StringIndexOutOfBoundsException err) {
+        	JOptionPane.showMessageDialog(graph, "You must enter a polynomial to graph.");
+        }
 	}
 	
 	
 	private void graphDerivative() {
-		System.out.println("Derivative");
+		
 	}
 	
 	
 	/** Displays the roots of the polynomial. */
 	private void showRoots() {
-		String poly = tf.getText();
-		Polynomial p = new Polynomial(poly);
-		double[] roots = p.getRoots((int)Double.parseDouble(xMinString), (int)Double.parseDouble(xMaxString));
-		
-		
-		// Create the roots string
-		String s = "";
-		for(Double d : roots) {
-			String str = "" + d;
-			if(str.substring(str.indexOf(".")).length() > 3) {
-				s += str.substring(0, str.indexOf(".")+3) + ", ";
-			} else {
-				s += str + ", ";
+		try {
+			String poly = tf.getText();
+			Polynomial p = new Polynomial(poly);
+			double[] roots = p.getRoots((int)Double.parseDouble(xMinString), (int)Double.parseDouble(xMaxString));
+			
+			
+			// Create the roots string. Only takes it to 3 decimal places.
+			String s = "";
+			for(Double d : roots) {
+				String str = "" + d;
+				if(str.substring(str.indexOf(".")).length() > 3) {
+					s += str.substring(0, str.indexOf(".")+3) + ", ";
+				} else {
+					s += str + ", ";
+				}
 			}
+			rootsTF.setText(s);
+		} catch(StringIndexOutOfBoundsException err) {
+			JOptionPane.showMessageDialog(graph, "You must enter a polynomial to find its roots.");
 		}
-		rootsTF.setText(s);
 	}
 	
 	

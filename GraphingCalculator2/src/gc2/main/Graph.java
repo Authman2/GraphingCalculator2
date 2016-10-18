@@ -15,8 +15,6 @@ private static final long serialVersionUID = 5445026948607143713L;
 	double[] xpoints;
 	double[] ypoints;
 	
-	double[] xpoints2;
-	double[] ypoints2;
 	int n;
 
 
@@ -89,16 +87,6 @@ private static final long serialVersionUID = 5445026948607143713L;
                 g.drawLine(firstX,firstY,firstX,firstY);
             }
         }
-        //Draw the second polynomial
-        if(xpoints2 != null) {
-            for(int i = 0; i < xpoints2.length - 1; i++) {
-                int firstX = (int)((getWidth()/(maxx-minx))*(xpoints2[i] - minx));
-                int firstY = (int)((getHeight()/(maxy-miny))*(maxy - ypoints2[i]));
-                
-                g.setColor(Color.gray);
-                g.drawLine(firstX,firstY,firstX,firstY);
-            }
-        }
     }
     
     /*This is responsible for finding all the x-values and y-values that need to be plotted, then adds them 
@@ -120,10 +108,6 @@ private static final long serialVersionUID = 5445026948607143713L;
          //X and Y coordinates for the first polynomial
          xpoints = new double[num*(int)((maxx-minx)+1)];
          ypoints = new double[num*(int)((maxx-minx)+1)];
-         
-         //X and Y coordinates for the second polynomial
-         xpoints2 = new double[num*(int)((maxx-minx)+1)];
-         ypoints2 = new double[num*(int)((maxx-minx)+1)];
          
          for(double i = minx; i <= maxx; i += 1.0/num) { 
              // 'i' is the x value and 'cp.p.evaluate(i)' is the y value

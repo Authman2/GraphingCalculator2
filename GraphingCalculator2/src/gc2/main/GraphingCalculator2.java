@@ -36,7 +36,9 @@ public class GraphingCalculator2 {
 		window.getWindowBody().add(graph);
 		
 
+		// The panel that holds all the components at the bottom of the page (function entry & roots)
 		JPanel bottomPanel = new JPanel(new GridLayout(2,2,1,1));
+		
 		// Add a text field where the user can enter a graph
 		functionInput = new JTextField("x^2");
 		bottomPanel.add(new JLabel("Polynomial:"));

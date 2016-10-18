@@ -417,4 +417,49 @@ public class Polynomial {
     }
 	
 	
+	
+	/** Returns a Polynomial object that is the derivative of this polynomial. */
+	public Polynomial getDerivative() {
+		Polynomial derivative = null;
+		ArrayList<String> newTerms = new ArrayList<String>();
+		
+		// Loop through the terms, coefficients, and exponents array and use the power rule.
+		for(int i = 0; i < coefficients.length; i++) {
+			if(terms[i].indexOf("x") > -1) {
+				// The new term.
+				String nTerm = "";
+				
+				// Using the power rule, take the original coefficient times the exponent
+				// Then subtract one from the exponent.
+				double nCoeff = coefficients[i] * exponents[i];
+				double nExp = exponents[i] - 1;
+			
+				nTerm = "" + nCoeff + "x^" + nExp;
+				newTerms.add(nTerm);
+			} else {
+				// Nothing, because if it was a constant term it will go away.
+			}
+		}
+		
+		// Construct the polynomial string
+		String poly = "";
+		for(String s : newTerms) {
+			poly += s;
+		}
+		
+		derivative = new Polynomial(poly);
+		
+		return derivative;
+	}
+
+
+
+	@Override
+	public String toString() {
+		String poly = "";
+		for(String term : terms) {
+			poly += term;
+		}
+		return poly;
+	}
 }
