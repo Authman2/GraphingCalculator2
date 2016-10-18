@@ -10,6 +10,12 @@ public class Polynomial {
 	// The terms of the polynomial in the form "coefficient-x^exponent"
 	String[] terms;
 	
+	// An array of just the coefficients
+	double[] coefficients;
+	
+	// An array of just the exponents
+	double[] exponents;
+	
 	// The types of operators as a string pattern.
 	ArrayList<String> operators = new ArrayList<String>();
 	
@@ -38,9 +44,12 @@ public class Polynomial {
 		// Get each term and put it into an array
 		terms = getEachTerm();
 		
-		
 		// Add "1" if there is just an "x" term with no other coefficient.
 		addOnes();
+		
+		// Fill the coefficients and exponents arrays.
+		coefficients = getCoefficients();
+		exponents = getExponents();
 	}
 
 	
@@ -64,7 +73,32 @@ public class Polynomial {
 	
 	
 	/////////// Getters ////////////
+	
+	/** Returns the degree of the polynomial. 
+	 * @return the greatest exponent in the polynomial.*/
+	public double getDegree() {
+		double deg = 0;
+		ArrayList<String> exponents = new ArrayList<String>();
+		
+		for(String term : terms) {
+			if(term.indexOf("^") > -1) {
+				exponents.add(term.substring(term.indexOf("^")+1 ));
+			}
+		}
+		
+		// Find highest exponent
+		for(String exp : exponents) {
+			if(Double.parseDouble(exp) > deg) {
+				deg = Double.parseDouble(exp);
+			}
+		}
+		
+		
+		return deg;
+	}
 
+	
+	
 	/** Finds and returns the index of the next operator.
 	 * @return the index of the next operator in the polynomial. */
 	private int findNextOperator(String poly) {
@@ -114,6 +148,71 @@ public class Polynomial {
 		}
 		
 		return theTerms;
+	}
+	
+	
+	
+	/** Fills the coefficients array with the coefficient of each term. This is called AFTER the getEachTerm
+	 * method because it assumes that the term array has already been filled. */
+	private double[] getCoefficients() {
+		double[] coeffs;
+		String coeffsString = "";
+		
+		// Loop through and add to the coeffs string.
+		for(String s : terms) {
+			if(s.indexOf("x") > -1) {
+				coeffsString += s.substring(0, s.indexOf("x")) + " ";
+			} 
+			else if(s.indexOf("^") > -1) {
+				coeffsString += s.substring(0, s.indexOf("^")) + " ";
+			} 
+			else {
+				coeffsString += s + " ";
+			}
+		}
+		
+		// Split into an array of strings.
+		String[] temp = coeffsString.split(" ");
+		coeffs = new double[temp.length];
+		
+		int k = 0;
+		for(String t : temp) {
+			coeffs[k] = Double.parseDouble(t);
+			k++;
+		}
+		
+		return coeffs;
+	}
+
+	
+	
+	/** Returns an array of all of the exponents in the polynomial. Must be called after the getEachTerm method. */
+	private double[] getExponents() {
+		double[] exponents;
+		
+		String temp = "";
+		
+		// Find the exponents
+		for(String s : terms) {
+			if(s.indexOf("^") > -1) {
+				temp += s.substring(s.indexOf("^")+1) + " ";
+			} else if(s.indexOf("x") > -1) {
+				temp += "1 ";
+			} else {
+				temp += "0 ";
+			}
+		}
+		
+		// Fill the array of exponents
+		String[] temp2 = temp.split(" ");
+		exponents = new double[temp2.length];
+		int k = 0;
+		for(String s : temp2) {
+			exponents[k] = Double.parseDouble(s);
+			k++;
+		}
+		
+		return exponents;
 	}
 	
 	
@@ -235,4 +334,87 @@ public class Polynomial {
 		
 		return answer;
 	}
+	
+	
+	
+	/** Returns the lower bound of a particular polynomial's roots. */
+    public double getLowerBound() {
+        return -getUpperBound();
+    }
+    
+    
+    
+    /** Returns the upper bound of a particular polynomial's roots. */
+    public double getUpperBound() {
+        //Coefficient of largest magnitude
+        double aMax = 0;
+        //Highest degree in the polynomial
+        int highestDeg = 0;
+        //Coefficient with the highest degree
+        double aN = 0;
+        
+        //Loop through the coefficients to find the one of greatest magnitude
+        for(int i = 0; i < coefficients.length; i++) {
+            if(Math.abs(coefficients[i]) > aMax) {
+                aMax = coefficients[i];
+            }
+        }
+        
+        //Loop through to find the coefficient of largest degree
+        for(int i = 0; i < exponents.length; i++) {
+            if(exponents[i] > highestDeg) {
+                highestDeg = i;
+            }
+        }
+        
+        aN = coefficients[highestDeg];
+        
+        double bound = 0;        
+        bound = 1 + Math.abs(aMax/aN);
+        
+        
+        return bound;
+    }
+	
+    
+	
+	/** Returns an array of the roots of the polynomial.
+	 * @param xmin -- The min value to look for roots at.
+	 * @param xmax -- The max value to look for roots at.
+	 * @return an array of doubles, which are the roots of the polynomial. */
+	public double[] getRoots(int xmin, int xmax) {
+		 //Create a really small step to use for moving along the x-axis.
+        double step = Math.abs((getUpperBound()-getLowerBound())/10000);
+        //Array of roots
+        ArrayList<Double> rootsTemp = new ArrayList<Double>();
+        
+        
+        // Check for zero
+        if(evaluate(0) == 0.0) {
+        	rootsTemp.add(new Double(0));
+        }
+        
+        /* Loop through to see if the sign changes between two points when they are evaluated. */
+        for(double i = xmin; i < xmax; i += step) {
+            if((evaluate(i) < 0 && evaluate(i+step) > 0) || (evaluate(i) > 0 && evaluate(i+step) < 0)) {
+                double root = (i + (i+step))/2;
+                rootsTemp.add(root);
+            }
+        }
+        
+        //Create an array of all of the real roots.
+        double[] realRoots = new double[rootsTemp.size()];
+        
+        int k = 0;
+        for(Double d : rootsTemp) {
+        	realRoots[k] = d;
+        	k++;
+        }
+        
+        
+        
+        return realRoots;
+    }
+	
+	
 }

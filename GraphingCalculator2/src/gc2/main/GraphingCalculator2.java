@@ -2,7 +2,10 @@ package gc2.main;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.GridLayout;
 
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import cw.components.titlebar.specific.sidebar.SideTitlebar;
@@ -12,6 +15,7 @@ import gc2.actions.ButtonActions;
 public class GraphingCalculator2 {
 
 	public static JTextField functionInput;
+	public static JTextField rootsTF;
 	public static Graph graph;
 	
 	
@@ -31,9 +35,21 @@ public class GraphingCalculator2 {
 		graph.setBackground(Color.white);
 		window.getWindowBody().add(graph);
 		
+
+		JPanel bottomPanel = new JPanel(new GridLayout(2,2,1,1));
 		// Add a text field where the user can enter a graph
 		functionInput = new JTextField("x^2");
-		window.getWindowBody().add(functionInput, BorderLayout.SOUTH);
+		bottomPanel.add(new JLabel("Polynomial:"));
+		bottomPanel.add(functionInput, BorderLayout.SOUTH);
+		
+		
+		// Add a text field so that the roots can be shown
+		bottomPanel.add(new JLabel("Roots:"));
+		rootsTF = new JTextField();
+		rootsTF.setEditable(false);
+		bottomPanel.add(rootsTF);
+		window.getWindowBody().add(bottomPanel, BorderLayout.SOUTH);
+		
 		
 		
 		// Create the buttons
@@ -43,10 +59,10 @@ public class GraphingCalculator2 {
 		((SideTitlebar)window.getTitlebar()).addMenuItem("Change Interval");
 		
 		// Give the buttons actions
-		((SideTitlebar)window.getTitlebar()).getMenuItems().get(0).addAction(new ButtonActions("GRAPH", functionInput, graph));
-		((SideTitlebar)window.getTitlebar()).getMenuItems().get(1).addAction(new ButtonActions("DERIVATIVE", functionInput, graph));
-		((SideTitlebar)window.getTitlebar()).getMenuItems().get(2).addAction(new ButtonActions("ROOTS", functionInput, graph));
-		((SideTitlebar)window.getTitlebar()).getMenuItems().get(3).addAction(new ButtonActions("INTERVAL", functionInput, graph));
+		((SideTitlebar)window.getTitlebar()).getMenuItems().get(0).addAction(new ButtonActions("GRAPH", functionInput, rootsTF, graph));
+		((SideTitlebar)window.getTitlebar()).getMenuItems().get(1).addAction(new ButtonActions("DERIVATIVE", functionInput, rootsTF, graph));
+		((SideTitlebar)window.getTitlebar()).getMenuItems().get(2).addAction(new ButtonActions("ROOTS", functionInput, rootsTF, graph));
+		((SideTitlebar)window.getTitlebar()).getMenuItems().get(3).addAction(new ButtonActions("INTERVAL", functionInput, rootsTF, graph));
 		
 		
 		

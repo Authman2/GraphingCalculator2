@@ -21,6 +21,9 @@ public class ButtonActions extends Action {
 	// The text field to grab the polynomial from.
 	JTextField tf;
 	
+	// The text field that displays the roots.
+	JTextField rootsTF;
+	
 	// The graph panel to display the graph on.
 	Graph graph;
 	
@@ -34,9 +37,10 @@ public class ButtonActions extends Action {
 	/**@param n -- The name of the operation to perform.
 	 * @param tf -- The text field to grab the polynomial from
 	 * @param g -- The graph to display the polynomial on. */
-	public ButtonActions(String n, JTextField tf, Graph g) {
+	public ButtonActions(String n, JTextField tf, JTextField rts, Graph g) {
 		name = n;
 		this.tf = tf;
+		this.rootsTF = rts;
 		this.graph = g;
 	}
 
@@ -82,8 +86,24 @@ public class ButtonActions extends Action {
 	}
 	
 	
+	/** Displays the roots of the polynomial. */
 	private void showRoots() {
-		System.out.println("Roots");
+		String poly = tf.getText();
+		Polynomial p = new Polynomial(poly);
+		double[] roots = p.getRoots((int)Double.parseDouble(xMinString), (int)Double.parseDouble(xMaxString));
+		
+		
+		// Create the roots string
+		String s = "";
+		for(Double d : roots) {
+			String str = "" + d;
+			if(str.substring(str.indexOf(".")).length() > 3) {
+				s += str.substring(0, str.indexOf(".")+3) + ", ";
+			} else {
+				s += str + ", ";
+			}
+		}
+		rootsTF.setText(s);
 	}
 	
 	
