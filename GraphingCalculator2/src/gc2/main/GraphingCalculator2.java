@@ -8,7 +8,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import cw.components.titlebar.specific.sidebar.SideTitlebar;
 import cw.components.windows.specific.SidebarWindow;
 import gc2.actions.ButtonActions;
 
@@ -55,16 +54,16 @@ public class GraphingCalculator2 {
 		
 		
 		// Create the buttons
-		((SideTitlebar)window.getTitlebar()).addMenuItem("Graph Function");
-		((SideTitlebar)window.getTitlebar()).addMenuItem("Graph Derivative");
-		((SideTitlebar)window.getTitlebar()).addMenuItem("Show Roots");
-		((SideTitlebar)window.getTitlebar()).addMenuItem("Change Interval");
+		window.getTitlebar().addMenuItem("Graph Function");
+		window.getTitlebar().addMenuItem("Graph Derivative");
+		window.getTitlebar().addMenuItem("Show Roots");
+		window.getTitlebar().addMenuItem("Change Interval");
 		
 		// Give the buttons actions
-		((SideTitlebar)window.getTitlebar()).getMenuItems().get(0).addAction(new ButtonActions("GRAPH", functionInput, rootsTF, graph));
-		((SideTitlebar)window.getTitlebar()).getMenuItems().get(1).addAction(new ButtonActions("DERIVATIVE", functionInput, rootsTF, graph));
-		((SideTitlebar)window.getTitlebar()).getMenuItems().get(2).addAction(new ButtonActions("ROOTS", functionInput, rootsTF, graph));
-		((SideTitlebar)window.getTitlebar()).getMenuItems().get(3).addAction(new ButtonActions("INTERVAL", functionInput, rootsTF, graph));
+		window.getTitlebar().getMenuItems().get(0).addAction(new ButtonActions("GRAPH", functionInput, rootsTF, graph));
+		window.getTitlebar().getMenuItems().get(1).addAction(new ButtonActions("DERIVATIVE", functionInput, rootsTF, graph));
+		window.getTitlebar().getMenuItems().get(2).addAction(new ButtonActions("ROOTS", functionInput, rootsTF, graph));
+		window.getTitlebar().getMenuItems().get(3).addAction(new ButtonActions("INTERVAL", functionInput, rootsTF, graph));
 		
 		
 		

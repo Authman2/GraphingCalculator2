@@ -107,7 +107,7 @@ public class ButtonActions extends Action {
         	JOptionPane.showMessageDialog(graph, "You must enter a polynomial to graph.");
         
 		} catch(NumberFormatException err) {
-			JOptionPane.showMessageDialog(graph, "There is no derivative of this polynomial.");
+			JOptionPane.showMessageDialog(graph, "There is no derivative for this polynomial.");
         }
 	}
 	
